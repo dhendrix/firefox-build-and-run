@@ -1,0 +1,107 @@
+diff --git a/build/moz.configure/lto-pgo.configure b/build/moz.configure/lto-pgo.configure
+--- a/build/moz.configure/lto-pgo.configure
++++ b/build/moz.configure/lto-pgo.configure
+@@ -86,7 +86,7 @@ def pgo_flags(compiler, profdata, target
+         return namespace(
+             gen_cflags=["-fprofile-generate"],
+             gen_ldflags=["-fprofile-generate"],
+-            use_cflags=["-fprofile-use", "-fprofile-correction", "-Wcoverage-mismatch"],
++            use_cflags=["-fprofile-use", "-fprofile-correction", "-Wno-coverage-mismatch"],
+             use_ldflags=["-fprofile-use"],
+         )
+ 
+diff --git a/build/pgo/profileserver.py b/build/pgo/profileserver.py
+--- a/build/pgo/profileserver.py
++++ b/build/pgo/profileserver.py
+@@ -87,9 +87,22 @@ if __name__ == "__main__":
+     locations = ServerLocations()
+     locations.add_host(host="127.0.0.1", port=PORT, options="primary,privileged")
+ 
+-    old_profraw_files = glob.glob("*.profraw")
+-    for f in old_profraw_files:
+-        os.remove(f)
++    using_gcc = False
++    try:
++        if build.config_environment.substs.get('CC_TYPE') == 'gcc':
++            using_gcc = True
++    except BuildEnvironmentNotFoundException:
++        pass
++
++    if using_gcc:
++        for dirpath, _, filenames in os.walk('.'):
++            for f in filenames:
++                if f.endswith('.gcda'):
++                    os.remove(os.path.join(dirpath, f))
++    else:
++        old_profraw_files = glob.glob('*.profraw')
++        for f in old_profraw_files:
++            os.remove(f)
+ 
+     with TemporaryDirectory() as profilePath:
+         # TODO: refactor this into mozprofile
+@@ -213,6 +226,10 @@ if __name__ == "__main__":
+             print("Firefox exited successfully, but produced a crashreport")
+             sys.exit(1)
+ 
++        print('Copying profile data....')
++        os.system('pwd');
++        os.system('tar cf profdata.tar.gz `find . -name "*.gcda"`; cd ..; tar xf instrumented/profdata.tar.gz;');
++
+         llvm_profdata = env.get("LLVM_PROFDATA")
+         if llvm_profdata:
+             profraw_files = glob.glob("*.profraw")
+diff --git a/mfbt/tests/moz.build b/mfbt/tests/moz.build
+--- a/mfbt/tests/moz.build
++++ b/mfbt/tests/moz.build
+@@ -86,11 +86,11 @@ if CONFIG["OS_ARCH"] != "WASI":
+ # Not to be unified with the rest, because this test
+ # sets MOZ_PRETEND_NO_JSRUST, which changes the behavior
+ # of the included headers.
+-CppUnitTests(
+-    [
+-        "TestUtf8",
+-    ]
+-)
++#CppUnitTests(
++#    [
++#        "TestUtf8",
++#    ]
++#)
+ 
+ # Wasi doesn't support <signal> yet so skip this test.
+ if not CONFIG["MOZ_ASAN"] and CONFIG["OS_ARCH"] != "WASI":
+diff --git a/python/mach/mach/site.py b/python/mach/mach/site.py
+--- a/python/mach/mach/site.py
++++ b/python/mach/mach/site.py
+@@ -565,11 +565,11 @@ class CommandSiteManager:
+             active_site = MozSiteMetadata.from_runtime()
+             if active_site.site_name == self._site_name:
+                 print(result.reason, file=sys.stderr)
+-                raise Exception(
+-                    f'The "{self._site_name}" site is out-of-date, even though it has '
+-                    f"already been activated. Was it modified while this Mach process "
+-                    f"was running?"
+-                )
++#                raise Exception(
++#                    f'The "{self._site_name}" site is out-of-date, even though it has '
++#                    f"already been activated. Was it modified while this Mach process "
++#                    f"was running?"
++#                )
+ 
+             _create_venv_with_pthfile(
+                 self._virtualenv,
+diff --git a/toolkit/components/terminator/nsTerminator.cpp b/toolkit/components/terminator/nsTerminator.cpp
+--- a/toolkit/components/terminator/nsTerminator.cpp
++++ b/toolkit/components/terminator/nsTerminator.cpp
+@@ -460,6 +460,11 @@ void nsTerminator::StartWatchdog() {
+   }
+ #endif
+ 
++  // Disable watchdog for PGO train builds - writting profile information at
++  // exit may take time and it is better to make build hang rather than
++  // silently produce poorly performing binary.
++  crashAfterMS = INT32_MAX;
++
+   UniquePtr<Options> options(new Options());
+   // crashAfterTicks is guaranteed to be > 0 as
+   // crashAfterMS >= ADDITIONAL_WAIT_BEFORE_CRASH_MS >> HEARTBEAT_INTERVAL_MS
