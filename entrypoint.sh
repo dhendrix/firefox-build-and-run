@@ -45,9 +45,9 @@ fi
 source ${HOME}/.bashrc
 
 # Get firefox sources
-if [ -n "$LOCAL_SRC" ]; then
-	echo "Copying Firefox sources from $LOCAL_SRC to ${MOZDIR}/"
-	rsync -a "${LOCAL_SRC}/" "${MOZDIR}/"
+if [ -n "$FIREFOX_SRC" ]; then
+	echo "Copying Firefox sources from $FIREFOX_SRC to ${MOZDIR}/"
+	rsync -a "${FIREFOX_SRC}/" "${MOZDIR}/"
 else
 	echo "Cloning Firefox from upstream"
 	sh clone_firefox.sh
@@ -102,9 +102,14 @@ hg update -r "$FIREFOX_RELEASE"
 mkdir "${HOME}/.mozbuild"
 ./mach bootstrap --no-system-changes --application-choice=browser
 
-if [ "$APPLY_PATCHES" -eq 1 ]; then
-	echo "Applying patches"
+if [ -n "$PATCHES" ]; then
+	if [ ! -d "$PATCHES" ]; then
+		echo "Patches directory \"$PATCHES\" does not exist"
+		exit 1
+	fi
+	echo "Applying patches from $PATCHES"
 	for p in ${HOME}/patches/${ARCH}/*.diff ; do
+		echo "Applying $p"
 		patch -p1 < "$p"
 	done
 fi
