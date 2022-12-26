@@ -87,10 +87,6 @@ cd "${MOZDIR}/"
 cp "${HOME}/mozconfigs/mozconfig-${ARCH}" mozconfig
 # Set level of parallelism. Assume ~1GB per build job.
 
-# Help the build system find wasi-wasm sysroot
-#wasi_sysroot="$(rustc --print sysroot)/lib/rustlib/wasm32-wasi"
-#echo "ac_add_options --with-wasi-sysroot=${wasi_sysroot}" >> mozconfig
-echo "ac_add_options --without-wasm-sandboxed-libraries" >> mozconfig
 # parallel build jobs
 echo "export CARGO_BUILD_JOBS=${JOBS}" >> mozconfig
 echo "mk_add_options MOZ_MAKE_FLAGS=-j${JOBS}" >> mozconfig
