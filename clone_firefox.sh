@@ -1,4 +1,7 @@
 #!/bin/bash
+#
+# SPDX-License-Identifier: Apache-2.0
+#
 # This helper script will clone the firefox repo using steps taken from
 # hg_clone_firefox() in bootstrap.py found here:
 # https://firefox-source-docs.mozilla.org/setup/linux_build.html

@@ -1,4 +1,6 @@
 #!/bin/bash
+#
+# SPDX-License-Identifier: Apache-2.0
 
 if [ "$DEBUG_MODE" -eq 1 ]; then
 	set +x
