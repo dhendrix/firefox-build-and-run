@@ -106,7 +106,7 @@ if [ -n "$PATCHES" ]; then
 		exit 1
 	fi
 	echo "Applying patches from $PATCHES"
-	for p in ${HOME}/patches/${ARCH}/*.diff ; do
+	for p in ${PATCHES}/*.patch ; do
 		echo "Applying $p"
 		patch -p1 < "$p"
 	done
