@@ -59,11 +59,14 @@ RUN yum install -y \
 	pciutils-devel-static \
 	pciutils-libs
 
-# Nice to have for interactive shells, but not necessary for firefox
+# Needed to copy and patch Firefox sources
+RUN yum install -y \
+	patch \
+	rsync
+
+# Nice to have for debug mode, but not necessary
 RUN yum install -y \
 	less \
-	patch \
-	rsync \
 	vim
 
 RUN \
