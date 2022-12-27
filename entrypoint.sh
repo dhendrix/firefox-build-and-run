@@ -118,7 +118,7 @@ echo "Building firefox"
 ./mach build
 
 # At last!
-./mach run
+./mach run && exit 0
 
 if [ "$DEBUG_MODE" -eq 1 ]; then
 	drop_to_shell
