@@ -5,6 +5,12 @@
 # This helper script will clone the firefox repo using steps taken from
 # hg_clone_firefox() in bootstrap.py found here:
 # https://firefox-source-docs.mozilla.org/setup/linux_build.html
+#
+# Unlike bootstrap.py, it will *NOT* attempt to bootstrap Firefox. Bootstrapping
+# sets up the Python virtual environment which makes it difficult to copy the
+# source code to another location (e.g. in the container). See the following URL
+# for more details:
+# https://firefox-source-docs.mozilla.org/build/buildsystem/python.html#deficiencies
 
 set -e
 
