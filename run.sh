@@ -123,6 +123,8 @@ fi
 # This will be bind mounted, so it must be absolute
 FIREFOX_DOWNLOADS="$(realpath $FIREFOX_DOWNLOADS)"
 
+TZ=$(readlink -f /etc/localtime  | sed 's/.*zoneinfo\/\([^"].*\)/\1/')
+
 # X11 stuff to share with container
 # The ROS wiki has good examples: http://wiki.ros.org/docker/Tutorials/GUI
 XSOCK=/tmp/.X11-unix
@@ -146,4 +148,5 @@ docker run -ti \
 		-e DEBUG_MODE=${DEBUG_MODE} \
 		-e FIREFOX_SRC=${FIREFOX_SRC} \
 		-e JOBS=${JOBS} \
+		-e TZ="${TZ}" \
 		"$DOCKER_IMAGE"
