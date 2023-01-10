@@ -11,9 +11,21 @@ export HOME="/home/firefox/"
 export MOZDIR="mozilla-unified"
 export DEBUG_MODE="$DEBUG_MODE"
 
+rc=0
+
 drop_to_shell() {
 	/bin/bash
-	exit 0
+	exit $rc
+}
+
+do_exit() {
+	rc=$1
+
+	if [ "$DEBUG_MODE" -eq 1 ]; then
+		drop_to_shell $rc
+	else
+		exit $rc
+	fi
 }
 
 cd "$HOME"
@@ -27,12 +39,10 @@ if [ -d "$MOZDIR" ]; then
 	echo "Found something! Trying it out..."
 	cd "$MOZDIR"
 	if ! ./mach run ; then
-		if [ "$DEBUG_MODE" -eq 1 ]; then
-			drop_to_shell
-		fi
+			do_exit 1
 	else
 		echo "Firefox found, but cannot run. This container may be corrupted."
-		exit 1
+		do_exit 1
 	fi
 fi
 echo "Nope, proceeding to build Firefox."
@@ -119,10 +129,5 @@ echo "Building firefox"
 ./mach build
 
 # At last!
-./mach run && exit 0
-
-if [ "$DEBUG_MODE" -eq 1 ]; then
-	drop_to_shell
-fi
-
-exit 1
+./mach run
+do_exit $?
