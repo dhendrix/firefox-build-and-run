@@ -6,9 +6,10 @@ if [ "$DEBUG_MODE" -eq 1 ]; then
 	set +x
 fi
 
-ARCH="$(uname -m)"
-HOME="/home/firefox/"
-MOZDIR="mozilla-unified"
+export ARCH="$(uname -m)"
+export HOME="/home/firefox/"
+export MOZDIR="mozilla-unified"
+export DEBUG_MODE="$DEBUG_MODE"
 
 drop_to_shell() {
 	/bin/bash
