@@ -133,12 +133,13 @@ mkdir "${HOME}/.mozbuild"
 ./mach bootstrap --no-system-changes --application-choice=browser
 
 if [ -n "$PATCHES" ]; then
-	if [ ! -d "$PATCHES" ]; then
-		echo "Patches directory \"$PATCHES\" does not exist"
-		exit 1
+	patchdir="${HOME}/${PATCHES}"
+	if [ ! -d "$patchdir" ]; then
+		echo "Patches directory \"$patchdir\" does not exist"
+		do_exit 1
 	fi
-	echo "Applying patches from $PATCHES"
-	for p in ${PATCHES}/*.patch ; do
+	echo "Applying patches from $patchdir"
+	for p in ${patchdir}/*.patch ; do
 		echo "Applying $p"
 		patch -p1 < "$p"
 	done
