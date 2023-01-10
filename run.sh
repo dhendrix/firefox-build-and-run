@@ -19,9 +19,9 @@ FIREFOX_SRC=""
 # Parallel build jobs. Some jobs will take ~1GB memory or more, so don't go 
 # crazy or you may end up with strange build failures caused by OOM. If no
 # value is passed into this script, then we'll try to calculate a reasonable
-# value based on CPU threads and available memory.
-# TODO
-JOBS=48
+# value based on CPU threads and available memory. The calculation will be done
+# inside the container in case the user wants to limit resources via Docker.
+JOBS=""
 
 #
 # Command-line parsing (loosely based on coreboot's buildgcc script)

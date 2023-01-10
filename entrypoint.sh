@@ -98,7 +98,28 @@ cd "${MOZDIR}/"
 cp "${HOME}/mozconfigs/mozconfig-${ARCH}" mozconfig
 # Set level of parallelism. Assume ~1GB per build job.
 
-# parallel build jobs
+# Parallel build jobs. To avoid running out of memory (leading to confusing
+# build failures) or making the system unresponsive, pick the lesser of:
+# - One-half the available memory in GiB (assume up to 2GiB per job)
+# - Number of CPU threads minus 1
+if [ -z "$JOBS" ]; then
+	mem=$(($(grep 'MemAvailable' /proc/meminfo  | awk '{ print $2 }') / 1024 / 1024 / 2))
+	num_threads=$(nproc --ignore=1)
+	echo "Available memory (GiB) / 2: $mem"
+	echo "Number of threads: $num_threads"
+	if [ "$mem" -lt "$num_threads" ]; then
+		JOBS="$mem"
+	else
+		JOBS="$num_threads"
+	fi
+fi
+
+if [ "$JOBS" -eq 0 ]; then
+	echo "Not enough resources to continue."
+	do_exit 1
+fi
+
+echo "Parallel build Jobs: $JOBS"
 echo "export CARGO_BUILD_JOBS=${JOBS}" >> mozconfig
 echo "mk_add_options MOZ_MAKE_FLAGS=-j${JOBS}" >> mozconfig
 
