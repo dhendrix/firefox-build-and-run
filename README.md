@@ -67,3 +67,4 @@ The `--src` option should be used if you plan to build firefox often, for exampl
 * Building Firefox On Linux: [https://firefox-source-docs.mozilla.org/setup/linux_build.html](https://firefox-source-docs.mozilla.org/setup/linux_build.html)
 * Talospace (ppc64le): [https://www.talospace.com](https://www.talospace.com)
 * FreeBSD Firefox Makefile: https://cgit.freebsd.org/ports/tree/www/firefox/Makefile
+* Fedora Firefox .spec file: https://src.fedoraproject.org/rpms/firefox/blob/rawhide/f/firefox.spec
