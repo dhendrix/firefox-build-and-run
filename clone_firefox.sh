@@ -22,7 +22,7 @@ if [ -e "$MOZDIR" ]; then
 fi
 
 mkdir -p "$MOZDIR"
-pushd "$MOZDIR"
+cd "$MOZDIR"
 
 hg --config format.generaldelta=true init
 
@@ -37,6 +37,6 @@ EOF
 
 hg pull https://hg.mozilla.org/mozilla-unified
 hg update -r central
-popd
+cd -
 
 set +e
