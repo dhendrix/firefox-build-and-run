@@ -145,8 +145,8 @@ docker run -ti \
         --network=host \
         --mount type=bind,target=/home/firefox/Downloads,src=${FIREFOX_DOWNLOADS} \
 		$FIREFOX_SRC_MOUNT_OPT \
-        -v ${XSOCK}:${XSOCK} \
-        -v ${XAUTH}:${XAUTH} \
+        -v ${XSOCK}:${XSOCK}:rw \
+        -v ${XAUTH}:${XAUTH}:rw \
         -e XAUTHORITY=${XAUTH} \
         -e DISPLAY=${DISPLAY} \
 		-e PATCHES=${PATCHES} \
