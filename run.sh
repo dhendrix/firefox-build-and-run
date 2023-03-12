@@ -129,8 +129,14 @@ TZ=$(readlink -f /etc/localtime  | sed 's/.*zoneinfo\/\([^"].*\)/\1/')
 # The ROS wiki has good examples: http://wiki.ros.org/docker/Tutorials/GUI
 XSOCK=/tmp/.X11-unix
 XAUTH=/tmp/.docker.xauth
-
-touch ${XAUTH}
+if [ -e "$XAUTH" ]; then
+	if [ ! -w "$XAUTH" ]; then
+		echo "xauth file \"$XAUTH\" exists but is not writeable"
+		exit 1
+	fi
+else
+	touch "$XAUTH"
+fi
 xauth nlist ${DISPLAY} | sed -e 's/^..../ffff/' | uniq | xauth -f ${XAUTH} nmerge -
 
 docker run -ti \
