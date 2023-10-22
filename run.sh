@@ -145,15 +145,17 @@ fi
 xauth nlist ${DISPLAY} | sed -e 's/^..../ffff/' | uniq | xauth -f ${XAUTH} nmerge -
 
 docker run -ti \
-        --name "$DOCKER_CONTAINER" \
-        --user firefox \
-        --network=host \
-        --mount type=bind,target=/home/firefox/Downloads,src=${FIREFOX_DOWNLOADS} \
+		--name "$DOCKER_CONTAINER" \
+		--user firefox \
+		--network=host \
+		--mount type=bind,target=/home/firefox/Downloads,src=${FIREFOX_DOWNLOADS} \
+		--device /dev/dri \
+		--device /dev/snd \
 		$FIREFOX_SRC_MOUNT_OPT \
-        -v ${XSOCK}:${XSOCK}:rw \
-        -v ${XAUTH}:${XAUTH}:rw \
-        -e XAUTHORITY=${XAUTH} \
-        -e DISPLAY=${DISPLAY} \
+		-v ${XSOCK}:${XSOCK}:rw \
+		-v ${XAUTH}:${XAUTH}:rw \
+		-e XAUTHORITY=${XAUTH} \
+		-e DISPLAY=${DISPLAY} \
 		-e PATCHES=${PATCHES} \
 		-e FIREFOX_RELEASE=${FIREFOX_RELEASE} \
 		-e DEBUG_MODE=${DEBUG_MODE} \
