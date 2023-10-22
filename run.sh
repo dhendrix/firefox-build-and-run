@@ -127,6 +127,11 @@ TZ=$(readlink -f /etc/localtime  | sed 's/.*zoneinfo\/\([^"].*\)/\1/')
 
 # X11 stuff to share with container
 # The ROS wiki has good examples: http://wiki.ros.org/docker/Tutorials/GUI
+#
+# If /tmp/.docker.xauth has some permission issue:
+# 1. Stop docker
+# 2. touch /tmp/.docker.xauth
+# 3. Start docker
 XSOCK=/tmp/.X11-unix
 XAUTH=/tmp/.docker.xauth
 if [ -e "$XAUTH" ]; then
