@@ -139,7 +139,7 @@ if [ -n "$PATCHES" ]; then
 		do_exit 1
 	fi
 	echo "Applying patches from $patchdir"
-	for p in ${patchdir}/*.patch ; do
+	for p in ${patchdir}/*.{patch,diff} ; do
 		echo "Applying $p"
 		patch -p1 < "$p"
 	done
