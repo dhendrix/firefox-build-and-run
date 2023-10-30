@@ -126,7 +126,6 @@ echo "mk_add_options MOZ_MAKE_FLAGS=-j${JOBS}" >> mozconfig
 
 # Bootstrapping needs to be done before patching since some patches touch build/
 echo "Bootstrapping firefox"
-hg pull
 hg update -r "$FIREFOX_RELEASE"
 # .mozbuild directory needs to exist or `mach bootstrap` will prompt for a
 # location to store build state
