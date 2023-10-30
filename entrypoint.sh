@@ -60,7 +60,8 @@ source ${HOME}/.bashrc
 # Get firefox sources
 if [ -n "$FIREFOX_SRC" ]; then
 	echo "Copying Firefox sources from $FIREFOX_SRC to ${MOZDIR}/"
-	rsync -a "${FIREFOX_SRC}/" "${MOZDIR}/"
+	# use --delete in case we're re-using an old firefox dir (e.g. in debug mode)
+	rsync -a --delete "${FIREFOX_SRC}/" "${MOZDIR}/"
 else
 	echo "Cloning Firefox from upstream"
 	sh clone_firefox.sh
