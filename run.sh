@@ -108,8 +108,8 @@ echo "debug mode: $DEBUG_MODE"
 echo "downloads: $FIREFOX_DOWNLOADS"
 echo "jobs: $JOBS"
 echo "patches: $PATCHES"
-echo "release: $RELEASE"
-echo "src: $SRC"
+echo "release: $FIREFOX_RELEASE"
+echo "src: $FIREFOX_SRC"
 
 docker image inspect "$DOCKER_IMAGE" >/dev/null
 if [ $? -ne 0 ]; then
