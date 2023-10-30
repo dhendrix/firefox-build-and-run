@@ -69,6 +69,11 @@ RUN yum install -y \
 	less \
 	vim
 
+ADD "https://github.com/WebAssembly/wasi-sdk/releases/download/wasi-sdk-20/libclang_rt.builtins-wasm32-wasi-20.0.tar.gz" /tmp/wasi/
+RUN \
+	tar zxf /tmp/wasi/*.tar.gz -C /tmp/wasi/ && \
+	mv /tmp/wasi/lib/wasi /usr/lib64/clang/16/lib/
+
 RUN \
 	groupadd -g $GID firefox && \
 	useradd --create-home --uid $UID --gid $GID --comment="Firefox User" firefox
