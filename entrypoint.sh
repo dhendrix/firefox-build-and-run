@@ -147,8 +147,15 @@ fi
 
 echo "Configuring firefox"
 ./mach configure
+if [ $? -ne 0 ]; then
+	do_exit $?
+fi
+
 echo "Building firefox"
 ./mach build
+if [ $? -ne 0 ]; then
+	do_exit $?
+fi
 
 # At last!
 ./mach run
