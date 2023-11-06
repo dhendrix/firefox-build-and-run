@@ -97,6 +97,10 @@ fi
 cd "${MOZDIR}/"
 # Copy and modify mozconfig
 cp "${HOME}/mozconfigs/mozconfig-${ARCH}" mozconfig
+
+# wasi sysroot
+echo "wasi_sysroot=${HOME}/.mozbuild/sysroot-wasm32-wasi/" >> mozconfig
+
 # Set level of parallelism. Assume ~1GB per build job.
 
 # Parallel build jobs. To avoid running out of memory (leading to confusing
