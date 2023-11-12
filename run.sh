@@ -152,8 +152,8 @@ docker run -ti \
 		--device /dev/dri \
 		--device /dev/snd \
 		$FIREFOX_SRC_MOUNT_OPT \
-		-v ${XSOCK}:${XSOCK}:rw \
-		-v ${XAUTH}:${XAUTH}:rw \
+		--mount type=bind,target=${XSOCK},src=${XSOCK} \
+		--mount type=bind,target=${XAUTH},src=${XAUTH} \
 		-e XAUTHORITY=${XAUTH} \
 		-e DISPLAY=${DISPLAY} \
 		-e PATCHES=${PATCHES} \
